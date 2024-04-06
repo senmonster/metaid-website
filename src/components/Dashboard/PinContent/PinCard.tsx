@@ -1,6 +1,6 @@
 import { Pin } from '@/utils/api';
 import React from 'react';
-import { Avatar, Pagination, Skeleton, Text } from '@mantine/core';
+import { Skeleton, Text } from '@mantine/core';
 import { BASE_URL } from '@/utils/request';
 import { isNil } from 'ramda';
 

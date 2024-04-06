@@ -11,7 +11,7 @@ import { repeat } from 'ramda';
 const PinContent = () => {
   const pagination = usePagination({ total: 10, initialPage: 1 });
 
-  const { data, isError, isFetching, isLoading } = useQuery({
+  const { data, isError, isLoading } = useQuery({
     queryKey: ['pin', 'list', pagination.active],
     queryFn: () =>
       metaidService.getPinList({ page: pagination.active, size: 18 }),
