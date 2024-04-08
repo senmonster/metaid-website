@@ -24,11 +24,11 @@ import ThemModeControl from '../ThemeModeControl';
 import { metaidService } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { checkMetaletInstalled, conirmMetaletTestnet } from '@/utils/wallet';
 import { isEmpty, isNil } from 'ramda';
 import { errors } from '@/utils/errors';
-import { IBtcConnector, MetaletWalletForBtc, btcConnect } from '@metaid/metaid';
+
 import {
   UserInfo,
   btcConnectorAtom,
@@ -40,11 +40,15 @@ import { useEffect, useState } from 'react';
 import { BASE_URL } from '@/utils/request';
 import cls from 'classnames';
 import MetaidUserform, { MetaidUserInfo } from './MetaidUserform';
+import { IBtcConnector, MetaletWalletForBtc, btcConnect } from '@metaid/metaid';
+
 interface Props {
   burger?: React.ReactNode;
 }
 
-export function AdminHeader({ burger }: Props) {
+const isBrowser = typeof window !== undefined; // check if component is rendered in a browser
+
+export default function AdminHeader({ burger }: Props) {
   const [connected, setConnected] = useRecoilState(connectedAtom);
   const [wallet, setWallet] = useRecoilState(walletAtom);
   const [btcConnector, setBtcConnector] = useRecoilState(btcConnectorAtom);

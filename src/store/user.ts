@@ -1,4 +1,3 @@
-// import { type BtcConnector } from '@metaid/metaid/dist/core/connector/btc';
 import { IBtcConnector, IMetaletWalletForBtc } from '@metaid/metaid';
 import { isNil } from 'ramda';
 import { atom, selector } from 'recoil';

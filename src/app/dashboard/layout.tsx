@@ -8,9 +8,15 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { AdminHeader } from '@/components/Headers/AdminHeader';
 import { Navbar } from '@/components/Navbar/Navbar';
 import { navLinks } from '@/config';
+// import AdminHeader from '@/components/Headers/AdminHeader';
+
+import dynamic from 'next/dynamic';
+
+const AdminHeader = dynamic(() => import('@/components/Headers/AdminHeader'), {
+  ssr: false,
+});
 
 interface Props {
   children: React.ReactNode;

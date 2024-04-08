@@ -1,4 +1,5 @@
 /* eslint-disable no-async-promise-executor */
+import { lazy } from 'react';
 
 import Compressor from 'compressorjs';
 import CryptoJs from 'crypto-js';
