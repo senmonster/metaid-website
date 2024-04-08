@@ -50,8 +50,12 @@ const MetaidContent = () => {
                   {m.name.slice(0, 1)}
                 </Avatar>
                 <div className='flex flex-col'>
-                  <div>{m.name}</div>
                   <div>
+                    {isEmpty(m?.name) || isNil(m?.name)
+                      ? `metaid-${m.rootTxId.slice(0, 4)}`
+                      : m?.name}
+                  </div>
+                  <div className='text-[12px] italic text-slate-400'>
                     {'#' +
                       m.rootTxId.slice(0, 4) +
                       '...' +
