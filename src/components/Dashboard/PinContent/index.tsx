@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Pagination } from '@mantine/core';
+import { Pagination, ScrollArea } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { metaidService } from '@/utils/api';
 import { usePagination } from '@mantine/hooks';
@@ -22,18 +22,23 @@ const PinContent = () => {
       {isError ? (
         'Server Error'
       ) : isLoading ? (
-        <div className='grid grid-cols-6 gap-4 p-2'>
-          {repeat(1, 18).map((p, index) => {
-            return <PinCard key={index} isLoading={true} />;
-          })}
-        </div>
-      ) : (
-        <>
-          <div className='grid grid-cols-6 gap-4 p-2'>
-            {(data?.Pins ?? []).map((p, index) => {
-              return <PinCard key={index} p={p} />;
+        <ScrollArea h={600} offsetScrollbars>
+          <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2'>
+            {repeat(1, 18).map((p, index) => {
+              return <PinCard key={index} isLoading={true} />;
             })}
           </div>
+        </ScrollArea>
+      ) : (
+        <>
+          <ScrollArea h={600} offsetScrollbars>
+            <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2'>
+              {(data?.Pins ?? []).map((p, index) => {
+                return <PinCard key={index} p={p} />;
+              })}
+            </div>
+          </ScrollArea>
+
           <Pagination
             className='absolute right-8 bottom-6'
             total={10}

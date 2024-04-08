@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Pagination } from '@mantine/core';
+import { Center, Loader, Pagination, ScrollArea } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { metaidService } from '@/utils/api';
 import { usePagination } from '@mantine/hooks';
@@ -19,27 +19,42 @@ const BlockContent = () => {
 
   return (
     <>
-      <div className='flex flex-col gap-8 p-4 relative'>
-        {(data?.msgList ?? []).map((blockNumber) => {
-          return (
-            <div key={blockNumber} className='flex items-center gap-4'>
-              <div className='font-bold text-2xl'>{'#' + blockNumber}</div>
-              <div className='grid grid-cols-5 flex-1 gap-2'>
-                {!isNil(data?.msgMap) &&
-                  data?.msgMap[blockNumber].map((p, index) => {
-                    return <PinCard p={p} key={index} />;
-                  })}
-              </div>
+      {isError ? (
+        'Server error'
+      ) : isLoading ? (
+        <Center className='h-[666px]'>
+          <Loader type='bars' />
+        </Center>
+      ) : (
+        <>
+          <ScrollArea h={600} offsetScrollbars>
+            <div className='flex flex-col gap-8 p-4'>
+              {(data?.msgList ?? []).map((blockNumber) => {
+                return (
+                  <div key={blockNumber} className='flex items-center gap-4'>
+                    <div className='font-bold text-2xl'>
+                      {'#' + blockNumber}
+                    </div>
+
+                    <div className='grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-5 flex-1 gap-2'>
+                      {!isNil(data?.msgMap) &&
+                        data?.msgMap[blockNumber].map((p, index) => {
+                          return <PinCard p={p} key={index} />;
+                        })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-        <Pagination
-          className='absolute right-8 bottom-6'
-          total={10}
-          value={pagination.active}
-          onChange={pagination.setPage}
-        />
-      </div>
+          </ScrollArea>
+          <Pagination
+            className='absolute right-8 bottom-6'
+            total={10}
+            value={pagination.active}
+            onChange={pagination.setPage}
+          />
+        </>
+      )}
     </>
   );
 };

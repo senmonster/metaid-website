@@ -1,8 +1,9 @@
 import { Pin } from '@/utils/api';
 import React from 'react';
-import { Skeleton, Text } from '@mantine/core';
+import { Skeleton, Text, useMantineColorScheme } from '@mantine/core';
 import { BASE_URL } from '@/utils/request';
 import { isNil } from 'ramda';
+import cls from 'classnames';
 
 type Iprops = {
   p?: Pin;
@@ -10,6 +11,8 @@ type Iprops = {
 };
 
 const PinCard = ({ p, isLoading = false }: Iprops) => {
+  const { colorScheme } = useMantineColorScheme();
+
   const content = isNil(p)
     ? ''
     : p.content.length <= 35
@@ -19,7 +22,10 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
   if (isNil(p)) {
     return (
       <Skeleton>
-        <div className='flex flex-col gap-2 border rounded-md p-4'>
+        <div className={cls('flex flex-col gap-2 border rounded-md p-4', {
+      'border-[var(--mantine-color-dark-4)]':
+        colorScheme === 'dark',
+    })}>
           <div className='flex items-center justify-between'>
             <Text size='xl' fw={700}>
               {'#' + '123'}
@@ -52,7 +58,10 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
   }
 
   return (
-    <div className='flex flex-col gap-2 border rounded-md p-4'>
+    <div className={cls('flex flex-col gap-2 border rounded-md p-4', {
+      'border-[var(--mantine-color-dark-4)]':
+        colorScheme === 'dark',
+    })}>
       <div className='flex items-center justify-between'>
         <Text size='xl' fw={700}>
           {'#' + p.number}

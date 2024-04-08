@@ -35,22 +35,6 @@ export default function RootLayout({
         <RecoilRoot>
           <MantineProvider>
             <AppProvider>{children}</AppProvider>
-            <ToastContainer
-              position='top-center'
-              toastStyle={{
-                width: '380px',
-              }}
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme='light'
-              closeButton={false}
-            />
           </MantineProvider>
         </RecoilRoot>
       </body>

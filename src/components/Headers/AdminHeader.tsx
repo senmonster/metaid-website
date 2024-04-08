@@ -23,7 +23,7 @@ import { Logo } from '../Logo/Logo';
 import ThemModeControl from '../ThemeModeControl';
 import { metaidService } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { checkMetaletInstalled, conirmMetaletTestnet } from '@/utils/wallet';
 import { isEmpty, isNil } from 'ramda';
@@ -36,7 +36,7 @@ import {
   userInfoAtom,
   walletAtom,
 } from '@/store/user';
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BASE_URL } from '@/utils/request';
 import cls from 'classnames';
 import MetaidUserform, { MetaidUserInfo } from './MetaidUserform';
@@ -222,10 +222,15 @@ export function AdminHeader({ burger }: Props) {
   return (
     <>
       <header className={cls(classes.header, 'pt-3 px-3')}>
-        {/* {burger && burger} */}
+        {burger && burger}
         <div className='flex items-center gap-2'>
           <Logo />
-          <Button variant='light' size='xs' radius='lg'>
+          <Button
+            variant='light'
+            size='xs'
+            radius='lg'
+            className='hidden md:block'
+          >
             {`total MetaID: ${data?.Count.metaId}` +
               '    |    ' +
               `total Pin: ${data?.Count.Pin}` +
