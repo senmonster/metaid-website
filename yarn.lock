@@ -198,10 +198,10 @@
   dependencies:
     inquirer "^9.2.11"
 
-"@metaid/metaid@^0.8.6":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@metaid/metaid/-/metaid-0.8.6.tgz#05b0cf2c13005136923424087d3fb188d544a4d7"
-  integrity sha512-KJ98KUKRDkekhTbz1Uj7VN0z3E4hppfxvg3Bg5vRteWfYALtitZad+itvGnY8DF1iXVNH647lHLRLasZmhxR1w==
+"@metaid/metaid@^0.8.8":
+  version "0.8.8"
+  resolved "https://registry.npmjs.org/@metaid/metaid/-/metaid-0.8.8.tgz#8046807b88920462dd13e70dcd553834a7b6f05a"
+  integrity sha512-dgfDBw2dUWVVD9a1KOkH9cUmq4kW/Kf4mVF37rO+c4Mhnny0bUDF5buXhhsTR2rw1nGoxZ1ib5K6MRRqPNRWFA==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     "@metaid/metaid-cli" "0.0.2"

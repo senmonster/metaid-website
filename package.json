@@ -11,7 +11,7 @@
   "dependencies": {
     "@mantine/core": "^7.7.1",
     "@mantine/hooks": "^7.7.1",
-    "@metaid/metaid": "^0.8.6",
+    "@metaid/metaid": "^0.8.8",
     "@tabler/icons-react": "^3.1.0",
     "@tanstack/react-query": "^5.28.14",
     "axios": "^1.6.8",

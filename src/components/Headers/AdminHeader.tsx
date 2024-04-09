@@ -42,18 +42,16 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "@/utils/request";
 import cls from "classnames";
 import MetaidUserform, { MetaidUserInfo } from "./MetaidUserform";
-import { IBtcConnector, MetaletWalletForBtc, btcConnect } from "@metaid/metaid";
-
+import { MetaletWalletForBtc, btcConnect } from "@metaid/metaid";
+import { IBtcConnector } from "@metaid/metaid";
 interface Props {
 	burger?: React.ReactNode;
 }
 
-const isBrowser = typeof window !== undefined; // check if component is rendered in a browser
-
 export default function AdminHeader({ burger }: Props) {
 	const [connected, setConnected] = useRecoilState(connectedAtom);
 	const [wallet, setWallet] = useRecoilState(walletAtom);
-	const [btcConnector, setBtcConnector] = useRecoilState(btcConnectorAtom);
+	const [btcConnector, setBtcConnector] = useState<IBtcConnector | null>(null);
 	const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 	const [metaidFormOpened, metaidFormHandler] = useDisclosure(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -138,18 +136,19 @@ export default function AdminHeader({ burger }: Props) {
 		// });
 
 		//////////////////////////
-		const _btcConnector: IBtcConnector = await btcConnect(_wallet);
+		const _btcConnector = await btcConnect(_wallet);
 
-		setBtcConnector(_btcConnector as IBtcConnector);
-		const hasMetaid = _btcConnector?.hasMetaid() ?? false;
-		sethasMetaid(hasMetaid);
+		setBtcConnector(_btcConnector);
+
+		const _hasMetaid = _btcConnector?.hasMetaid() ?? false;
+		sethasMetaid(_hasMetaid);
 
 		// const doc_modal = document.getElementById(
 		//   'create_metaid_modal'
 		// ) as HTMLDialogElement;
 		// doc_modal.showModal();
 		// console.log("getUser", await _btcConnector.getUser());
-		if (hasMetaid) {
+		if (_hasMetaid) {
 			const resUser = await _btcConnector.getUser();
 			console.log("user now", resUser);
 			setUserInfo(resUser);
@@ -206,7 +205,7 @@ export default function AdminHeader({ burger }: Props) {
 		metaidFormHandler.close();
 		// await onWalletConnectStart();
 	};
-
+	console.log("sdfsdf", userInfo, hasMetaid);
 	return (
 		<>
 			<header className={cls(classes.header, "pt-3 px-3")}>
