@@ -27,7 +27,9 @@ const PinDetail = ({ id }: Iprops) => {
 					<Text c={"blue"} size={"xl"}>
 						{data?.contentTypeDetect}
 					</Text>
-					{!data?.contentTypeDetect.includes("image") ? (
+					{data?.operation === "init" ? null : !data?.contentTypeDetect.includes(
+							"image"
+					  ) ? (
 						<Container
 							h={200}
 							w={"100%"}

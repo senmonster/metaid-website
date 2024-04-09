@@ -7,6 +7,7 @@ import {
 	Button,
 	LoadingOverlay,
 	Modal,
+	Skeleton,
 	// TextInput,
 	Tooltip,
 } from "@mantine/core";
@@ -38,7 +39,7 @@ import {
 	userInfoAtom,
 	walletAtom,
 } from "@/store/user";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BASE_URL } from "@/utils/request";
 import cls from "classnames";
 import MetaidUserform, { MetaidUserInfo } from "./MetaidUserform";
@@ -59,7 +60,7 @@ export default function AdminHeader({ burger }: Props) {
 	const [hasMetaid, sethasMetaid] = useRecoilState(hasMetaidAtom);
 
 	const clipboard = useClipboard({ timeout: 3000 });
-	const { data } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: ["pin", "list", 1],
 		queryFn: () => metaidService.getPinList({ page: 1, size: 18 }),
 	});
@@ -209,101 +210,107 @@ export default function AdminHeader({ burger }: Props) {
 	console.log("sdfsdf", userInfo, hasMetaid);
 	return (
 		<>
-			<header className={cls(classes.header, "pt-3 px-3")}>
-				{burger && burger}
-				<div className="flex items-center gap-2">
-					<Logo />
-					<Button variant="light" size="xs" radius="lg" className="hidden md:block">
-						{`total MetaID: ${data?.Count.metaId}` +
-							"    |    " +
-							`total Pin: ${data?.Count.Pin}` +
-							"    |    " +
-							`total Block: ${data?.Count.block}` +
-							"    |    " +
-							`total APP: ${data?.Count.app}`}
-					</Button>
-				</div>
+			{isLoading ? (
+				<Skeleton visible={isLoading} className="w-[80%] h-[60%] mt-3 mx-auto"></Skeleton>
+			) : (
+				<header className={cls(classes.header, "pt-3 px-3")}>
+					{burger && burger}
+					<div className="flex items-center gap-2">
+						<Logo />
+						<Button variant="light" size="xs" radius="lg" className="hidden md:block">
+							{`total MetaID: ${data?.Count.metaId}` +
+								"    |    " +
+								`total Pin: ${data?.Count.Pin}` +
+								"    |    " +
+								`total Block: ${data?.Count.block}` +
+								"    |    " +
+								`total APP: ${data?.Count.app}`}
+						</Button>
+					</div>
 
-				{/* <Box style={{ flex: 1 }} /> */}
-				<div className="flex gap-2 items-center">
-					{/* <TextInput
+					{/* <Box style={{ flex: 1 }} /> */}
+					<div className="flex gap-2 items-center">
+						{/* <TextInput
             placeholder='Search'
             variant='filled'
             leftSection={<IconSearch size='0.8rem' />}
             style={{}}
           /> */}
-					<ThemModeControl />
-					{!connected ? (
-						<Button
-							variant="light"
-							onClick={async () => {
-								await onWalletConnectStart();
-							}}
-						>
-							Connect Wallet
-						</Button>
-					) : (
-						<div
-							className={cls("flex items-center gap-4 relative", {
-								"pr-12": hasMetaid,
-							})}
-						>
-							<div className="flex gap-1 text-gray-400 items-center">
-								<div>address:</div>
-								<div>
-									{!isNil(wallet?.address) &&
-										wallet?.address.slice(0, 4) +
-											"..." +
-											wallet?.address.slice(-4)}
-								</div>
+						<ThemModeControl />
+						{!connected ? (
+							<Button
+								variant="light"
+								onClick={async () => {
+									await onWalletConnectStart();
+								}}
+							>
+								Connect Wallet
+							</Button>
+						) : (
+							<div
+								className={cls("flex items-center gap-4 relative", {
+									"pr-12": hasMetaid,
+								})}
+							>
+								<div className="flex gap-1 text-gray-400 items-center">
+									<div>address:</div>
+									<div>
+										{!isNil(wallet?.address) &&
+											wallet?.address.slice(0, 4) +
+												"..." +
+												wallet?.address.slice(-4)}
+									</div>
 
-								{!clipboard.copied ? (
+									{!clipboard.copied ? (
+										<ActionIcon
+											variant={"subtle"}
+											color="gray"
+											size="lg"
+											aria-label="Settings"
+										>
+											<IconCopy
+												className="cursor-pointer"
+												style={{ width: "70%", height: "70%" }}
+												stroke={1.5}
+												onClick={() =>
+													clipboard.copy(wallet?.address ?? "")
+												}
+											/>
+										</ActionIcon>
+									) : (
+										<ActionIcon
+											variant={"subtle"}
+											color="gray"
+											size="lg"
+											aria-label="Settings"
+										>
+											<IconCopyCheck
+												className="cursor-pointer"
+												style={{ width: "70%", height: "70%" }}
+												stroke={1.5}
+											/>
+										</ActionIcon>
+									)}
 									<ActionIcon
 										variant={"subtle"}
 										color="gray"
 										size="lg"
 										aria-label="Settings"
 									>
-										<IconCopy
-											className="cursor-pointer"
-											style={{ width: "70%", height: "70%" }}
-											stroke={1.5}
-											onClick={() => clipboard.copy(wallet?.address ?? "")}
-										/>
-									</ActionIcon>
-								) : (
-									<ActionIcon
-										variant={"subtle"}
-										color="gray"
-										size="lg"
-										aria-label="Settings"
-									>
-										<IconCopyCheck
+										<IconLogout
+											onClick={onLogout}
 											className="cursor-pointer"
 											style={{ width: "70%", height: "70%" }}
 											stroke={1.5}
 										/>
 									</ActionIcon>
-								)}
-								<ActionIcon
-									variant={"subtle"}
-									color="gray"
-									size="lg"
-									aria-label="Settings"
-								>
-									<IconLogout
-										onClick={onLogout}
-										className="cursor-pointer"
-										style={{ width: "70%", height: "70%" }}
-										stroke={1.5}
-									/>
-								</ActionIcon>
+								</div>
+								<MetaidInfo hasMetaid={hasMetaid} userInfo={userInfo} />
 							</div>
-							<MetaidInfo hasMetaid={hasMetaid} userInfo={userInfo} />
-						</div>
-					)}
-				</div>
-			</header>
+						)}
+					</div>
+				</header>
+			)}
 			<Modal
 				opened={metaidFormOpened}
 				onClose={metaidFormHandler.close}
