@@ -1,10 +1,9 @@
 "use client";
 
 import { metaidService } from "@/utils/api";
-import { Center, Container, Loader, Text } from "@mantine/core";
+import { Center, Container, Loader, Text, Image } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-
 type Iprops = {
 	id: string;
 };
@@ -28,13 +27,32 @@ const PinDetail = ({ id }: Iprops) => {
 					<Text c={"blue"} size={"xl"}>
 						{data?.contentTypeDetect}
 					</Text>
-					<Container
-						h={50}
-						bg={"var(--mantine-color-blue-light)"}
-						className={"rounded-md grid place-items-center"}
-					>
-						{data?.contentBody ?? ""}{" "}
-					</Container>
+					{!data?.contentTypeDetect.includes("image") ? (
+						<Container
+							h={200}
+							w={"100%"}
+							bg={"var(--mantine-color-blue-light)"}
+							className={"rounded-md grid place-items-center"}
+						>
+							{data?.contentBody ?? ""}{" "}
+						</Container>
+					) : (
+						<Container
+							h={200}
+							w={"100%"}
+							bg={"var(--mantine-color-blue-light)"}
+							className={"rounded-md grid place-items-center"}
+						>
+							<Image
+								src={data?.content}
+								alt="image"
+								h={100}
+								w="auto"
+								fit="contain"
+								fallbackSrc={data?.content}
+							/>
+						</Container>
+					)}
 					<div className="flex gap-2 items-center">
 						<Text className="text-slate-400 italic">id:</Text>
 						<Text>{data?.id}</Text>

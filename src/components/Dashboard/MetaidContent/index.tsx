@@ -58,7 +58,9 @@ const MetaidContent = () => {
 											}
 										)}
 										onClick={() =>
-											router.push(`/dashboard/pin-detail/${m.nameId}`)
+											router.push(
+												`/dashboard/pin-detail/${m.rootTxId + "i0"}`
+											)
 										}
 									>
 										<Avatar

@@ -51,7 +51,7 @@ interface Props {
 export default function AdminHeader({ burger }: Props) {
 	const [connected, setConnected] = useRecoilState(connectedAtom);
 	const [wallet, setWallet] = useRecoilState(walletAtom);
-	const [btcConnector, setBtcConnector] = useState<IBtcConnector | null>(null);
+	const [btcConnector, setBtcConnector] = useRecoilState<IBtcConnector | null>(btcConnectorAtom);
 	const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 	const [metaidFormOpened, metaidFormHandler] = useDisclosure(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -137,7 +137,8 @@ export default function AdminHeader({ burger }: Props) {
 
 		//////////////////////////
 		const _btcConnector = await btcConnect(_wallet);
-
+		console.log("_btcConnector", _btcConnector, _btcConnector.hasMetaid());
+		console.log("_wallet", _wallet, await _wallet.getBalance());
 		setBtcConnector(_btcConnector);
 
 		const _hasMetaid = _btcConnector?.hasMetaid() ?? false;
