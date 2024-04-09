@@ -49,3 +49,15 @@ export const walletAtom = atom<IMetaletWalletForBtc | null>({
 	default: null,
 	effects_UNSTABLE: [persistAtom],
 });
+
+export const balanceAtom = atom<string>({
+	key: "balanceAtom",
+	default: "0",
+	effects_UNSTABLE: [persistAtom],
+});
+
+export const hasMetaidAtom = atom<boolean>({
+	key: "hasMetaidAtom",
+	default: false,
+	effects_UNSTABLE: [persistAtom],
+});
