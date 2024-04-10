@@ -21,7 +21,7 @@ const PinContent = () => {
 			{isError ? (
 				"Server Error"
 			) : isLoading ? (
-				<ScrollArea h={600} offsetScrollbars>
+				<ScrollArea className="h-[calc(100vh_-_210px)]" offsetScrollbars>
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2">
 						{repeat(1, 18).map((p, index) => {
 							return <PinCard key={index} isLoading={true} />;
@@ -30,7 +30,7 @@ const PinContent = () => {
 				</ScrollArea>
 			) : (
 				<>
-					<ScrollArea h={600} offsetScrollbars>
+					<ScrollArea className="h-[calc(100vh_-_210px)]" offsetScrollbars>
 						<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2">
 							{(data?.Pins ?? []).map((p, index) => {
 								return <PinCard key={index} p={p} />;
