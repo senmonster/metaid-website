@@ -15,26 +15,27 @@ import {
 import { BASE_URL } from "@/utils/request";
 import { useQuery } from "@tanstack/react-query";
 import { metaidService } from "@/utils/api";
-import { usePagination } from "@mantine/hooks";
+import { useDebouncedValue, usePagination } from "@mantine/hooks";
 import cls from "classnames";
 import { useRouter } from "next/navigation";
 
 const MetaidContent = () => {
 	const [size, setSize] = useState<string | number>(30);
+  const [debouncedSize] = useDebouncedValue(size, 800);
 
 	const { data: CountData } = useQuery({
 		queryKey: ["pin", "list", 1],
-		queryFn: () => metaidService.getPinList({ page: 1, size: Number(size) }),
+		queryFn: () => metaidService.getPinList({ page: 1, size: Number(debouncedSize) }),
 	});
-	const total = Math.ceil(divide(CountData?.Count?.metaId ?? Number(size), Number(size)));
+	const total = Math.ceil(divide(CountData?.Count?.metaId ?? Number(debouncedSize), Number(debouncedSize)));
 
 	const pagination = usePagination({ total, initialPage: 1 });
 	const { colorScheme } = useMantineColorScheme();
 	const router = useRouter();
 
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ["metaidItem", "list", pagination.active, Number(size)],
-		queryFn: () => metaidService.getMetaidList({ page: pagination.active, size: Number(size) }),
+		queryKey: ["metaidItem", "list", pagination.active, Number(debouncedSize)],
+		queryFn: () => metaidService.getMetaidList({ page: pagination.active, size: Number(debouncedSize) }),
 	});
 	return (
 		<>
@@ -43,7 +44,7 @@ const MetaidContent = () => {
 			) : isLoading ? (
 				<ScrollArea className="h-[calc(100vh_-_210px)]" offsetScrollbars>
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2">
-						{repeat(1, Number(size)).map((m, idx) => {
+						{repeat(1, Number(debouncedSize)).map((m, idx) => {
 							return (
 								<Skeleton visible={isLoading} key={idx}>
 									<div className="flex gap-2 border rounded-md p-4">
@@ -119,7 +120,7 @@ const MetaidContent = () => {
 							<NumberInput
 								className="w-[80px]"
 								min={1}
-								max={CountData?.Count?.metaId ?? Number(size)}
+								max={CountData?.Count?.metaId ?? Number(debouncedSize)}
 								value={size}
 								onChange={setSize}
 							/>

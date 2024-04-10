@@ -4,23 +4,27 @@ import React, { useState } from "react";
 import { Flex, NumberInput, Pagination, ScrollArea, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { metaidService } from "@/utils/api";
-import { usePagination } from "@mantine/hooks";
+import { useDebouncedValue, usePagination } from "@mantine/hooks";
 import PinCard from "./PinCard";
 import { divide, repeat } from "ramda";
 
 const PinContent = () => {
 	const [size, setSize] = useState<string | number>(18);
+	const [debouncedSize] = useDebouncedValue(size, 800);
 
 	const { data: CountData } = useQuery({
 		queryKey: ["pin", "list", 1],
-		queryFn: () => metaidService.getPinList({ page: 1, size: Number(size) }),
+		queryFn: () => metaidService.getPinList({ page: 1, size: Number(debouncedSize) }),
 	});
-	const total = Math.ceil(divide(CountData?.Count?.Pin ?? Number(size), Number(size)));
+	const total = Math.ceil(
+		divide(CountData?.Count?.Pin ?? Number(debouncedSize), Number(debouncedSize))
+	);
 	const pagination = usePagination({ total, initialPage: 1 });
 
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ["pin", "list", pagination.active, Number(size)],
-		queryFn: () => metaidService.getPinList({ page: pagination.active, size: Number(size) }),
+		queryKey: ["pin", "list", pagination.active, Number(debouncedSize)],
+		queryFn: () =>
+			metaidService.getPinList({ page: pagination.active, size: Number(debouncedSize) }),
 	});
 
 	return (
@@ -30,7 +34,7 @@ const PinContent = () => {
 			) : isLoading ? (
 				<ScrollArea className="h-[calc(100vh_-_210px)]" offsetScrollbars>
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2">
-						{repeat(1, Number(size)).map((p, index) => {
+						{repeat(1, Number(debouncedSize)).map((p, index) => {
 							return <PinCard key={index} isLoading={true} />;
 						})}
 					</div>
@@ -59,7 +63,7 @@ const PinContent = () => {
 							<NumberInput
 								className="w-[80px]"
 								min={1}
-								max={CountData?.Count?.Pin ?? Number(size)}
+								max={CountData?.Count?.Pin ?? Number(debouncedSize)}
 								value={size}
 								onChange={setSize}
 							/>

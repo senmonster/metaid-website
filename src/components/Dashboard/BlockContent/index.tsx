@@ -4,24 +4,28 @@ import React, { useState } from "react";
 import { Center, Flex, Loader, NumberInput, Pagination, ScrollArea, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { metaidService } from "@/utils/api";
-import { usePagination } from "@mantine/hooks";
+import { useDebouncedValue, usePagination } from "@mantine/hooks";
 import { isNil, divide } from "ramda";
 import PinCard from "../PinContent/PinCard";
 
 const BlockContent = () => {
 	const [size, setSize] = useState<string | number>(18);
+	const [debouncedSize] = useDebouncedValue(size, 800);
 
 	const { data: CountData } = useQuery({
 		queryKey: ["pin", "list", 1],
-		queryFn: () => metaidService.getPinList({ page: 1, size: Number(size) }),
+		queryFn: () => metaidService.getPinList({ page: 1, size: Number(debouncedSize) }),
 	});
-	const total = Math.ceil(divide(CountData?.Count?.Pin ?? Number(size), Number(size)));
+	const total = Math.ceil(
+		divide(CountData?.Count?.Pin ?? Number(debouncedSize), Number(debouncedSize))
+	);
 
 	const pagination = usePagination({ total, initialPage: 1 });
 
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ["block", "list", pagination.active, Number(size)],
-		queryFn: () => metaidService.getBlockList({ page: pagination.active, size: Number(size) }),
+		queryKey: ["block", "list", pagination.active, Number(debouncedSize)],
+		queryFn: () =>
+			metaidService.getBlockList({ page: pagination.active, size: Number(debouncedSize) }),
 	});
 
 	return (
@@ -68,7 +72,7 @@ const BlockContent = () => {
 							<NumberInput
 								className="w-[80px]"
 								min={1}
-								max={CountData?.Count?.Pin ?? Number(size)}
+								max={CountData?.Count?.Pin ?? Number(debouncedSize)}
 								value={size}
 								onChange={setSize}
 							/>
