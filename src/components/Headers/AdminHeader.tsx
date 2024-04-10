@@ -207,7 +207,7 @@ export default function AdminHeader({ burger }: Props) {
 		metaidFormHandler.close();
 		// await onWalletConnectStart();
 	};
-	console.log("sdfsdf", userInfo, hasMetaid);
+	// console.log("useinfo hasMetaid", userInfo, hasMetaid);
 	return (
 		<>
 			{isLoading ? (

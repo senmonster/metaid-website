@@ -1,19 +1,26 @@
 "use client";
 
-import React from "react";
-import { Pagination, ScrollArea } from "@mantine/core";
+import React, { useState } from "react";
+import { Flex, NumberInput, Pagination, ScrollArea, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { metaidService } from "@/utils/api";
 import { usePagination } from "@mantine/hooks";
 import PinCard from "./PinCard";
-import { repeat } from "ramda";
+import { divide, repeat } from "ramda";
 
 const PinContent = () => {
-	const pagination = usePagination({ total: 10, initialPage: 1 });
+	const [size, setSize] = useState<string | number>(18);
+
+	const { data: CountData } = useQuery({
+		queryKey: ["pin", "list", 1],
+		queryFn: () => metaidService.getPinList({ page: 1, size: Number(size) }),
+	});
+	const total = Math.ceil(divide(CountData?.Count?.Pin ?? Number(size), Number(size)));
+	const pagination = usePagination({ total, initialPage: 1 });
 
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ["pin", "list", pagination.active],
-		queryFn: () => metaidService.getPinList({ page: pagination.active, size: 18 }),
+		queryKey: ["pin", "list", pagination.active, Number(size)],
+		queryFn: () => metaidService.getPinList({ page: pagination.active, size: Number(size) }),
 	});
 
 	return (
@@ -23,7 +30,7 @@ const PinContent = () => {
 			) : isLoading ? (
 				<ScrollArea className="h-[calc(100vh_-_210px)]" offsetScrollbars>
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2">
-						{repeat(1, 18).map((p, index) => {
+						{repeat(1, Number(size)).map((p, index) => {
 							return <PinCard key={index} isLoading={true} />;
 						})}
 					</div>
@@ -38,12 +45,31 @@ const PinContent = () => {
 						</div>
 					</ScrollArea>
 
-					<Pagination
-						className="absolute right-8 bottom-6"
-						total={10}
-						value={pagination.active}
-						onChange={pagination.setPage}
-					/>
+					<Flex
+						className="absolute right-8 bottom-10"
+						justify="center"
+						align="center"
+						direction="row"
+						gap="lg"
+					>
+						<div className="flex gap-2 items-center">
+							<Text size="sm" c="dimmed">
+								Size Per Page
+							</Text>
+							<NumberInput
+								className="w-[80px]"
+								min={1}
+								max={CountData?.Count?.Pin ?? Number(size)}
+								value={size}
+								onChange={setSize}
+							/>
+						</div>
+						<Pagination
+							total={total}
+							value={pagination.active}
+							onChange={pagination.setPage}
+						/>
+					</Flex>
 				</>
 			)}
 		</>

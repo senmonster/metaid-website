@@ -1,8 +1,17 @@
 "use client";
 
-import React from "react";
-import { isEmpty, isNil, repeat } from "ramda";
-import { Avatar, Pagination, ScrollArea, Skeleton, useMantineColorScheme } from "@mantine/core";
+import React, { useState } from "react";
+import { divide, isEmpty, isNil, repeat } from "ramda";
+import {
+	Avatar,
+	Flex,
+	NumberInput,
+	Pagination,
+	ScrollArea,
+	Skeleton,
+	useMantineColorScheme,
+	Text,
+} from "@mantine/core";
 import { BASE_URL } from "@/utils/request";
 import { useQuery } from "@tanstack/react-query";
 import { metaidService } from "@/utils/api";
@@ -11,13 +20,21 @@ import cls from "classnames";
 import { useRouter } from "next/navigation";
 
 const MetaidContent = () => {
-	const pagination = usePagination({ total: 10, initialPage: 1 });
+	const [size, setSize] = useState<string | number>(30);
+
+	const { data: CountData } = useQuery({
+		queryKey: ["pin", "list", 1],
+		queryFn: () => metaidService.getPinList({ page: 1, size: Number(size) }),
+	});
+	const total = Math.ceil(divide(CountData?.Count?.metaId ?? Number(size), Number(size)));
+
+	const pagination = usePagination({ total, initialPage: 1 });
 	const { colorScheme } = useMantineColorScheme();
 	const router = useRouter();
 
 	const { data, isError, isLoading } = useQuery({
-		queryKey: ["metaidItem", "list", pagination.active],
-		queryFn: () => metaidService.getMetaidList({ page: pagination.active, size: 30 }),
+		queryKey: ["metaidItem", "list", pagination.active, Number(size)],
+		queryFn: () => metaidService.getMetaidList({ page: pagination.active, size: Number(size) }),
 	});
 	return (
 		<>
@@ -26,7 +43,7 @@ const MetaidContent = () => {
 			) : isLoading ? (
 				<ScrollArea className="h-[calc(100vh_-_210px)]" offsetScrollbars>
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6 gap-4 p-2">
-						{repeat(1, 30).map((m, idx) => {
+						{repeat(1, Number(size)).map((m, idx) => {
 							return (
 								<Skeleton visible={isLoading} key={idx}>
 									<div className="flex gap-2 border rounded-md p-4">
@@ -88,12 +105,31 @@ const MetaidContent = () => {
 							})}
 						</div>
 					</ScrollArea>
-					<Pagination
+					<Flex
 						className="absolute right-8 bottom-10"
-						total={2}
-						value={pagination.active}
-						onChange={pagination.setPage}
-					/>
+						justify="center"
+						align="center"
+						direction="row"
+						gap="lg"
+					>
+						<div className="flex gap-2 items-center">
+							<Text size="sm" c="dimmed">
+								Size Per Page
+							</Text>
+							<NumberInput
+								className="w-[80px]"
+								min={1}
+								max={CountData?.Count?.metaId ?? Number(size)}
+								value={size}
+								onChange={setSize}
+							/>
+						</div>
+						<Pagination
+							total={total}
+							value={pagination.active}
+							onChange={pagination.setPage}
+						/>
+					</Flex>
 				</>
 			)}
 		</>
