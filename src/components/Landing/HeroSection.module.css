@@ -37,7 +37,7 @@
 .subtitle {
 	padding-top: var(--mantine-spacing-xl);
 	line-height: 1.05;
-	font-size: rem(40px);
+	font-size: rem(50px);
 	max-width: 100%;
 
 	@media (max-width: $mantine-breakpoint-md) {

@@ -36,7 +36,7 @@ const PinDetail = ({ id }: Iprops) => {
 							bg={"var(--mantine-color-blue-light)"}
 							className={"rounded-md grid place-items-center"}
 						>
-							{data?.contentBody ?? ""}{" "}
+							<p className="break-all text-wrap">{data?.contentSummary ?? ""}</p>
 						</Container>
 					) : (
 						<Container

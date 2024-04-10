@@ -9,7 +9,7 @@
 .title {
 	font-weight: 800;
 	line-height: 1.05;
-	font-size: rem(60px);
+	font-size: rem(50px);
 	max-width: 100%;
 
 	@media (max-width: $mantine-breakpoint-md) {
