@@ -156,6 +156,7 @@ export default function AdminHeader({ burger }: Props) {
 		// 	e.returnValue = confirmMessage;
 		// 	return confirmMessage;
 		// });
+		// window.addEventListener("beforeunload", handleBeforeUnload);
 
 		//////////////////////////
 		const _btcConnector = await btcConnect(_wallet);
