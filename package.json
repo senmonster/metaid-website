@@ -28,6 +28,7 @@
 		"recoil-persist": "^5.1.0"
 	},
 	"devDependencies": {
+		"@tanstack/react-query-devtools": "^5.29.0",
 		"@types/classnames": "^2.3.1",
 		"@types/crypto-js": "^4.2.2",
 		"@types/node": "^20",
