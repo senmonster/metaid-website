@@ -28,7 +28,7 @@ export const connectedAtom = atom({
 export const btcConnectorAtom = atom<IBtcConnector | null>({
 	key: "btcConnectorAtom",
 	default: null,
-	// effects_UNSTABLE: [persistAtom],
+	effects_UNSTABLE: [persistAtom],
 });
 export const userInfoAtom = atom<UserInfo | null>({
 	key: "userInfoAtom",

@@ -185,8 +185,10 @@ export default function AdminHeader({ burger }: Props) {
 		setBalance(((await window.metaidwallet?.btc.getBalance())?.confirmed ?? 0).toString());
 		setIsSubmitting(true);
 
+		const _wallet = await MetaletWalletForBtc.create();
+		const _btcConnector = await btcConnect(_wallet);
 		if (hasMetaid) {
-			const res = await btcConnector!.updatUserInfo({ ...userInfo }).catch((error) => {
+			const res = await _btcConnector!.updatUserInfo({ ...userInfo }).catch((error) => {
 				console.log("error", error);
 				const errorMessage = (error as any)?.message;
 				const toastMessage = errorMessage?.includes("Cannot read properties of undefined")
@@ -194,18 +196,16 @@ export default function AdminHeader({ burger }: Props) {
 					: errorMessage;
 				toast.error(toastMessage);
 				setIsSubmitting(false);
-				// setUserInfoStartValues(userInfoStartValues);
-				//   setUserInfo(await btcConnector.getUser());
 			});
 			console.log("update res", res);
 			if (res) {
-				console.log("after create", await btcConnector!.getUser());
-				setUserInfo(await btcConnector!.getUser());
+				console.log("after create", await _btcConnector!.getUser());
+				setUserInfo(await _btcConnector!.getUser());
 				setIsSubmitting(false);
 				toast.success("Updating Your Profile Successfully!");
 			}
 		} else {
-			const res = await btcConnector!.createMetaid({ ...userInfo }).catch((error: any) => {
+			const res = await _btcConnector!.createMetaid({ ...userInfo }).catch((error: any) => {
 				setIsSubmitting(false);
 
 				const errorMessage = TypeError(error).message;
