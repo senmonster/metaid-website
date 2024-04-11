@@ -14,8 +14,9 @@ const PinContent = () => {
 
 	const { data: CountData } = useQuery({
 		queryKey: ["pin", "list", 1],
-		queryFn: () => metaidService.getPinList({ page: 1, size: Number(debouncedSize) }),
+		queryFn: () => metaidService.getPinList({ page: 1, size: 1 }),
 	});
+
 	const total = Math.ceil(
 		divide(CountData?.Count?.Pin ?? Number(debouncedSize), Number(debouncedSize))
 	);
@@ -26,7 +27,6 @@ const PinContent = () => {
 		queryFn: () =>
 			metaidService.getPinList({ page: pagination.active, size: Number(debouncedSize) }),
 	});
-
 	return (
 		<>
 			{isError ? (

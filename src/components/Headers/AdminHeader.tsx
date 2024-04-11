@@ -64,7 +64,7 @@ export default function AdminHeader({ burger }: Props) {
 	const clipboard = useClipboard({ timeout: 3000 });
 	const { data, isLoading } = useQuery({
 		queryKey: ["pin", "list", 1],
-		queryFn: () => metaidService.getPinList({ page: 1, size: 18 }),
+		queryFn: () => metaidService.getPinList({ page: 1, size: 1 }),
 	});
 
 	const MetaidInfo = ({

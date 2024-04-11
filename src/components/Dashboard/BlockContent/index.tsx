@@ -14,7 +14,7 @@ const BlockContent = () => {
 
 	const { data: CountData } = useQuery({
 		queryKey: ["pin", "list", 1],
-		queryFn: () => metaidService.getPinList({ page: 1, size: Number(debouncedSize) }),
+		queryFn: () => metaidService.getPinList({ page: 1, size: 1 }),
 	});
 	const total = Math.ceil(
 		divide(CountData?.Count?.Pin ?? Number(debouncedSize), Number(debouncedSize))
