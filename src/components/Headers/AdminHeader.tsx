@@ -5,6 +5,7 @@ import {
 	Avatar,
 	Box,
 	Button,
+	Divider,
 	LoadingOverlay,
 	Modal,
 	Skeleton,
@@ -16,6 +17,7 @@ import {
 	IconCopy,
 	IconCopyCheck,
 	IconLogout,
+	IconWallet,
 	// IconSearch,
 	// IconSettings,
 } from "@tabler/icons-react";
@@ -215,7 +217,7 @@ export default function AdminHeader({ burger }: Props) {
 			) : (
 				<header className={cls(classes.header, "pt-3 px-3")}>
 					{burger && burger}
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-12">
 						<Logo />
 						<Button variant="light" size="xs" radius="lg" className="hidden md:block">
 							{`total MetaID: ${data?.Count.metaId}` +
@@ -237,6 +239,7 @@ export default function AdminHeader({ burger }: Props) {
             style={{}}
           /> */}
 						<ThemModeControl />
+						<Divider orientation="vertical" className="h-[20px] my-auto !mx-2" />
 						{!connected ? (
 							<Button
 								variant="light"
@@ -253,7 +256,10 @@ export default function AdminHeader({ burger }: Props) {
 								})}
 							>
 								<div className="flex gap-1 text-gray-400 items-center">
-									<div>address:</div>
+									<IconWallet
+										style={{ width: "70%", height: "70%" }}
+										stroke={1.5}
+									/>
 									<div>
 										{!isNil(wallet?.address) &&
 											wallet?.address.slice(0, 4) +
@@ -291,6 +297,10 @@ export default function AdminHeader({ burger }: Props) {
 											/>
 										</ActionIcon>
 									)}
+									<Divider
+										orientation="vertical"
+										className="h-[20px] my-auto mx-2"
+									/>
 									<ActionIcon
 										variant={"subtle"}
 										color="gray"

@@ -21,13 +21,15 @@ import { useRouter } from "next/navigation";
 
 const MetaidContent = () => {
 	const [size, setSize] = useState<string | number>(30);
-  const [debouncedSize] = useDebouncedValue(size, 800);
+	const [debouncedSize] = useDebouncedValue(size, 800);
 
 	const { data: CountData } = useQuery({
 		queryKey: ["pin", "list", 1],
 		queryFn: () => metaidService.getPinList({ page: 1, size: Number(debouncedSize) }),
 	});
-	const total = Math.ceil(divide(CountData?.Count?.metaId ?? Number(debouncedSize), Number(debouncedSize)));
+	const total = Math.ceil(
+		divide(CountData?.Count?.metaId ?? Number(debouncedSize), Number(debouncedSize))
+	);
 
 	const pagination = usePagination({ total, initialPage: 1 });
 	const { colorScheme } = useMantineColorScheme();
@@ -35,7 +37,8 @@ const MetaidContent = () => {
 
 	const { data, isError, isLoading } = useQuery({
 		queryKey: ["metaidItem", "list", pagination.active, Number(debouncedSize)],
-		queryFn: () => metaidService.getMetaidList({ page: pagination.active, size: Number(debouncedSize) }),
+		queryFn: () =>
+			metaidService.getMetaidList({ page: pagination.active, size: Number(debouncedSize) }),
 	});
 	return (
 		<>
@@ -89,7 +92,7 @@ const MetaidContent = () => {
 											{m.name.slice(0, 1)}
 										</Avatar>
 										<div className="flex flex-col">
-											<div>
+											<div className="font-bold text-[18px]">
 												{isEmpty(m?.name) || isNil(m?.name)
 													? `metaid-${m.rootTxId.slice(0, 4)}`
 													: m?.name}
