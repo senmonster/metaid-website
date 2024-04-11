@@ -91,8 +91,8 @@ const MetaidContent = () => {
 										>
 											{m.name.slice(0, 1)}
 										</Avatar>
-										<div className="flex flex-col">
-											<div className="font-bold text-[18px]">
+										<div className="flex flex-col truncate">
+											<div className="font-bold text-[18px] truncate">
 												{isEmpty(m?.name) || isNil(m?.name)
 													? `metaid-${m.rootTxId.slice(0, 4)}`
 													: m?.name}
