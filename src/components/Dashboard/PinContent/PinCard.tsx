@@ -1,6 +1,6 @@
 import { Pin } from "@/utils/api";
 import React from "react";
-import { Container, Skeleton, Text, useMantineColorScheme } from "@mantine/core";
+import { Container, Divider, Skeleton, Text, useMantineColorScheme } from "@mantine/core";
 import { BASE_URL } from "@/utils/request";
 import { isEmpty, isNil } from "ramda";
 import cls from "classnames";
@@ -51,7 +51,7 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
 					</Text>
 				)}
 			</div>
-
+			<Divider />
 			<div className="flex flex-col gap-2">
 				<div className="flex gap-2 ">
 					<Text size="sm" c="dimmed">
