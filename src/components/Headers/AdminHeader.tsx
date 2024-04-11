@@ -41,7 +41,7 @@ import {
 	userInfoAtom,
 	walletAtom,
 } from "@/store/user";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "@/utils/request";
 import cls from "classnames";
 import MetaidUserform, { MetaidUserInfo } from "./MetaidUserform";
@@ -66,6 +66,25 @@ export default function AdminHeader({ burger }: Props) {
 		queryKey: ["pin", "list", 1],
 		queryFn: () => metaidService.getPinList({ page: 1, size: 1 }),
 	});
+
+	const handleBeforeUnload = async () => {
+		console.log("refresh ....");
+		if (hasMetaid && !isNil(wallet)) {
+			const _btcConnector = await btcConnect(wallet);
+			setUserInfo(_btcConnector.user);
+			console.log("refetch user", _btcConnector.user);
+		}
+	};
+
+	const wrapHandleBeforeUnload = useCallback(handleBeforeUnload, [
+		wallet,
+		hasMetaid,
+		setUserInfo,
+	]);
+
+	useEffect(() => {
+		wrapHandleBeforeUnload();
+	}, [wrapHandleBeforeUnload]);
 
 	const MetaidInfo = ({
 		hasMetaid,
@@ -153,9 +172,8 @@ export default function AdminHeader({ burger }: Props) {
 		// doc_modal.showModal();
 		// console.log("getUser", await _btcConnector.getUser());
 		if (_hasMetaid) {
-			const resUser = await _btcConnector.getUser();
-			console.log("user now", resUser);
-			setUserInfo(resUser);
+			setUserInfo(_btcConnector.user);
+			console.log("user now", _btcConnector.user);
 			console.log("your btc address: ", _btcConnector.address);
 		}
 	};

@@ -22,7 +22,7 @@ export type UserInfo = {
 export const connectedAtom = atom({
 	key: "connectedAtom",
 	default: false,
-	// effects_UNSTABLE: [persistAtom],
+	effects_UNSTABLE: [persistAtom],
 });
 
 export const btcConnectorAtom = atom<IBtcConnector | null>({
@@ -33,7 +33,7 @@ export const btcConnectorAtom = atom<IBtcConnector | null>({
 export const userInfoAtom = atom<UserInfo | null>({
 	key: "userInfoAtom",
 	default: null,
-	// effects_UNSTABLE: [persistAtom],
+	effects_UNSTABLE: [persistAtom],
 });
 
 export const initStillPoolAtom = selector<boolean>({
@@ -47,17 +47,17 @@ export const initStillPoolAtom = selector<boolean>({
 export const walletAtom = atom<IMetaletWalletForBtc | null>({
 	key: "walletAtom",
 	default: null,
-	// effects_UNSTABLE: [persistAtom],
+	effects_UNSTABLE: [persistAtom],
 });
 
 export const balanceAtom = atom<string>({
 	key: "balanceAtom",
 	default: "0",
-	// effects_UNSTABLE: [persistAtom],
+	effects_UNSTABLE: [persistAtom],
 });
 
 export const hasMetaidAtom = atom<boolean>({
 	key: "hasMetaidAtom",
 	default: false,
-	// effects_UNSTABLE: [persistAtom],
+	effects_UNSTABLE: [persistAtom],
 });
