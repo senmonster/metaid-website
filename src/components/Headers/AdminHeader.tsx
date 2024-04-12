@@ -344,6 +344,7 @@ export default function AdminHeader({ burger }: Props) {
 				opened={metaidFormOpened}
 				onClose={metaidFormHandler.close}
 				title={hasMetaid ? "Edit MetaID Detail" : "Create MetaID Detail"}
+				size={"lg"}
 			>
 				<Box pos="relative">
 					<LoadingOverlay

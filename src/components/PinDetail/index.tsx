@@ -1,7 +1,8 @@
 "use client";
 
 import { metaidService } from "@/utils/api";
-import { Center, Container, Loader, Text, Image } from "@mantine/core";
+import { Center, Container, Loader, Text, Image, Button, Modal } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 type Iprops = {
@@ -13,6 +14,7 @@ const PinDetail = ({ id }: Iprops) => {
 		queryKey: ["pin", "detail", id],
 		queryFn: () => metaidService.getPinDetail({ id }),
 	});
+	const [viewMoreOpened, viewMoreHandler] = useDisclosure(false);
 
 	return (
 		<>
@@ -30,14 +32,33 @@ const PinDetail = ({ id }: Iprops) => {
 					{data?.operation === "init" ? null : !data?.contentTypeDetect.includes(
 							"image"
 					  ) ? (
-						<Container
-							h={200}
-							w={"100%"}
-							bg={"var(--mantine-color-blue-light)"}
-							className={"rounded-md grid place-items-center"}
-						>
-							<p className="break-all text-wrap">{data?.contentSummary ?? ""}</p>
-						</Container>
+						<div className="flex flex-col gap-2">
+							<Container
+								h={200}
+								w={"100%"}
+								bg={"var(--mantine-color-blue-light)"}
+								className={"rounded-md grid place-items-center overflow-hidden"}
+							>
+								<p className="text-wrap break-all">
+									{`${data?.contentSummary ?? ""}${
+										(data?.contentSummary ?? "").length > 1900 && "..."
+									}`}
+								</p>
+							</Container>
+
+							{(data?.contentSummary ?? "").length > 1900 && (
+								<Container w={"100%"} className={"rounded-md grid place-items-end"}>
+									<Button
+										onClick={viewMoreHandler.open}
+										variant="light"
+										size="xs"
+										className="mr-[-16px]"
+									>
+										View More
+									</Button>
+								</Container>
+							)}
+						</div>
 					) : (
 						<Container
 							h={200}
@@ -121,6 +142,36 @@ const PinDetail = ({ id }: Iprops) => {
 					</div>
 				</div>
 			)}
+			<Modal opened={viewMoreOpened} onClose={viewMoreHandler.close} size="lg">
+				{data?.operation === "init" ? null : !data?.contentTypeDetect.includes("image") ? (
+					<div className="flex flex-col gap-2">
+						<Container
+							// h={200}
+							w={"100%"}
+							bg={"var(--mantine-color-blue-light)"}
+							className={"rounded-md grid place-items-center"}
+						>
+							<p className="break-all text-wrap">{data?.contentSummary ?? ""}</p>
+						</Container>
+					</div>
+				) : (
+					<Container
+						// h={200}
+						w={"100%"}
+						bg={"var(--mantine-color-blue-light)"}
+						className={"rounded-md grid place-items-center"}
+					>
+						<Image
+							src={data?.content}
+							alt="image"
+							h={100}
+							w="auto"
+							fit="contain"
+							fallbackSrc={data?.content}
+						/>
+					</Container>
+				)}
+			</Modal>
 		</>
 	);
 };

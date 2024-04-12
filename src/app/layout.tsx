@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			</head>
 			<body>
 				<RecoilRoot>
-					<MantineProvider>
+					<MantineProvider defaultColorScheme="dark">
 						<AppProvider>{children}</AppProvider>
 					</MantineProvider>
 				</RecoilRoot>

@@ -87,7 +87,7 @@ type MetaidService = {
 };
 
 export const metaidService: MetaidService = {
-	getMetaidList: (params) => api.get("/api/metaid/list", { params }),
+	getMetaidList: (params) => api.get("/api/metaid/wolist", { params }),
 	getPinList: (params) => api.get("/api/pin/list", { params }),
 	getPinDetail: (params) => api.get(`/api/pin/${params.id}`),
 	getBlockList: (params) => api.get("/api/block/list", { params }),

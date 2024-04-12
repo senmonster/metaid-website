@@ -74,7 +74,9 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
 			<Container
 				h={120}
 				w={"100%"}
-				className={"rounded-md grid place-items-center bg-gray-200"}
+				className={cls("rounded-md grid place-items-center bg-gray-200", {
+					"bg-gray-500": colorScheme === "dark",
+				})}
 			>
 				{p.type.includes("image") ? (
 					// eslint-disable-next-line @next/next/no-img-element
