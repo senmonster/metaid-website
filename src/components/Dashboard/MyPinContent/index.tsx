@@ -55,10 +55,12 @@ const MyPinContent = () => {
 										key={index}
 										p={{
 											...p,
-											type: "",
+											type: p.contentType,
 											height: 0,
 											rootId: p.rootTxId,
-											content: p.contentSummary,
+											content: p.contentType.includes("image")
+												? "/content/" + p.id
+												: p.contentSummary,
 										}}
 									/>
 								);
