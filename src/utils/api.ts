@@ -73,6 +73,7 @@ type MetaidService = {
 		page: number;
 		size: number;
 	}) => Promise<{ Pins: Pin[]; Count: Count; Active: string }>;
+	getPinListByAddress: (params: { addressType: string; address: string }) => Promise<PinDetail[]>;
 	getBlockList: (params: { page: number; size: number }) => Promise<{
 		msgMap: Record<number, Pin[]>;
 		msgList: number[];
@@ -87,11 +88,13 @@ type MetaidService = {
 };
 
 export const metaidService: MetaidService = {
-	getMetaidList: (params) => api.get("/api/metaid/wolist", { params }),
+	getMetaidList: (params) => api.get("/api/metaid/list", { params }),
 	getPinList: (params) => api.get("/api/pin/list", { params }),
 	getPinDetail: (params) => api.get(`/api/pin/${params.id}`),
 	getBlockList: (params) => api.get("/api/block/list", { params }),
 	getMempoolList: (params) => api.get("/api/mempool/list", { params }),
+	getPinListByAddress: (params) =>
+		api.get(`/api/address/pin/list/${params.addressType}/${params.address}`),
 	//   getNodeList : (params) => api.get('/api/node/list', { params })
 };
 

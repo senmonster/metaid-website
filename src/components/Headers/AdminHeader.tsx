@@ -7,6 +7,7 @@ import {
 	Button,
 	Divider,
 	LoadingOverlay,
+	Menu,
 	Modal,
 	Skeleton,
 	// TextInput,
@@ -47,6 +48,8 @@ import cls from "classnames";
 import MetaidUserform, { MetaidUserInfo } from "./MetaidUserform";
 import { MetaletWalletForBtc, btcConnect } from "@metaid/metaid";
 import { IBtcConnector } from "@metaid/metaid";
+import { useRouter } from "next/navigation";
+
 interface Props {
 	burger?: React.ReactNode;
 }
@@ -60,6 +63,7 @@ export default function AdminHeader({ burger }: Props) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [balance, setBalance] = useRecoilState(balanceAtom);
 	const [hasMetaid, sethasMetaid] = useRecoilState(hasMetaidAtom);
+	const router = useRouter();
 
 	const clipboard = useClipboard({ timeout: 3000 });
 	const { data, isLoading } = useQuery({
@@ -95,17 +99,27 @@ export default function AdminHeader({ burger }: Props) {
 	}) => {
 		if (hasMetaid && !isNil(userInfo)) {
 			return (
-				<Tooltip label="Click to edit your detail">
-					<Avatar
-						onClick={metaidFormHandler.open}
-						radius="xl"
-						size={"md"}
-						src={!isEmpty(userInfo?.avatar) ? BASE_URL + userInfo.avatar : null}
-						className="absolute right-0 bottom-[2px] shadow-md cursor-pointer"
-					>
-						{(userInfo?.name ?? "").slice(0, 1)}
-					</Avatar>
-				</Tooltip>
+				<Menu shadow="md" width={120} position="bottom-end" withArrow classNames={{}}>
+					<Menu.Target>
+						<div>
+							<Avatar
+								radius="xl"
+								size={"md"}
+								src={!isEmpty(userInfo?.avatar) ? BASE_URL + userInfo.avatar : null}
+								className="shadow-md cursor-pointer"
+							>
+								{(userInfo?.name ?? "").slice(0, 1)}
+							</Avatar>
+						</div>
+					</Menu.Target>
+
+					<Menu.Dropdown>
+						<Menu.Item onClick={() => router.push("/dashboard/my-pin")}>
+							My Pin
+						</Menu.Item>
+						<Menu.Item onClick={metaidFormHandler.open}>Edit Profile</Menu.Item>
+					</Menu.Dropdown>
+				</Menu>
 			);
 		}
 		return (
@@ -271,7 +285,7 @@ export default function AdminHeader({ burger }: Props) {
 						) : (
 							<div
 								className={cls("flex items-center gap-4 relative", {
-									"pr-12": hasMetaid,
+									"pr-2": hasMetaid,
 								})}
 							>
 								<div className="flex gap-1 text-gray-400 items-center">
