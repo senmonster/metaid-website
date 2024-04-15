@@ -75,15 +75,16 @@ export default function AdminHeader({ burger }: Props) {
 
 	const handleBeforeUnload = async () => {
 		console.log("refresh ....");
-		if (hasMetaid && !isNil(wallet)) {
-			const _btcConnector = await btcConnect(wallet);
+		if (hasMetaid) {
+			const _wallet = MetaletWalletForBtc.restore(walletParams!);
+			const _btcConnector = await btcConnect(_wallet);
 			setUserInfo(_btcConnector.user);
 			console.log("refetch user", _btcConnector.user);
 		}
 	};
 
 	const wrapHandleBeforeUnload = useCallback(handleBeforeUnload, [
-		wallet,
+		walletParams,
 		hasMetaid,
 		setUserInfo,
 	]);
@@ -134,9 +135,35 @@ export default function AdminHeader({ burger }: Props) {
 		setConnected(false);
 		setBtcConnector(null);
 		setUserInfo(null);
-		window.metaidwallet.removeListener("accountsChanged");
-		window.metaidwallet.removeListener("networkChanged");
+		window.metaidwallet.removeListener("accountsChanged", handleAcccountsChanged);
+		window.metaidwallet.removeListener("networkChanged", handleNetworkChanged);
 	};
+
+	const handleAcccountsChanged = () => {
+		onLogout();
+		toast.error(
+			"Wallet Account Changed ---- You have been automatically logged out of your current MetaID account. Please login again..."
+		);
+	};
+
+	const handleNetworkChanged = async (network: string) => {
+		console.log("network", network);
+		if (network !== "testnet") {
+			onLogout();
+			toast.error(
+				"Wallet Network Changed ---- You have been automatically logged out of your current MetaID account. Please Switch to Testnet login again..."
+			);
+			await window.metaidwallet.switchNetwork("testnet");
+		}
+	};
+
+	useEffect(() => {
+		if (connected) {
+			console.log("here");
+			window.metaidwallet.on("accountsChanged", handleAcccountsChanged);
+			window.metaidwallet.on("networkChanged", handleNetworkChanged);
+		}
+	}, [connected]);
 
 	const onWalletConnectStart = async () => {
 		await checkMetaletInstalled();
@@ -155,7 +182,7 @@ export default function AdminHeader({ burger }: Props) {
 		window.metaidwallet.on("accountsChanged", () => {
 			onLogout();
 			toast.error(
-				"Wallet Account Changed ---- You have been automatically logged out of your current BitBuzz account. Please login again..."
+				"Wallet Account Changed ---- You have been automatically logged out of your current MetaID account. Please login again..."
 			);
 		});
 		window.metaidwallet.on("networkChanged", async (network: string) => {
@@ -163,7 +190,7 @@ export default function AdminHeader({ burger }: Props) {
 			if (network !== "testnet") {
 				onLogout();
 				toast.error(
-					"Wallet Network Changed ---- You have been automatically logged out of your current BitBuzz account. Please Switch to Testnet login again..."
+					"Wallet Network Changed ---- You have been automatically logged out of your current MetaID account. Please Switch to Testnet login again..."
 				);
 				await window.metaidwallet.switchNetwork("testnet");
 			}
@@ -208,10 +235,13 @@ export default function AdminHeader({ burger }: Props) {
 		if (hasMetaid) {
 			const res = await _btcConnector!.updatUserInfo({ ...userInfo }).catch((error) => {
 				console.log("error", error);
-				const errorMessage = (error as any)?.message;
-				const toastMessage = errorMessage?.includes("Cannot read properties of undefined")
+				const errorMessage = error as TypeError;
+				console.log(errorMessage.message);
+				const toastMessage = errorMessage?.message?.includes(
+					"Cannot read properties of undefined"
+				)
 					? "User Canceled"
-					: errorMessage;
+					: errorMessage.message;
 				toast.error(toastMessage);
 				setIsSubmitting(false);
 			});
