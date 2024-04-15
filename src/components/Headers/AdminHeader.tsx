@@ -250,7 +250,10 @@ export default function AdminHeader({ burger }: Props) {
 	return (
 		<>
 			{isLoading ? (
-				<Skeleton visible={isLoading} className="w-[80%] h-[60%] mt-3 mx-auto"></Skeleton>
+				<div className="flex justify-between w-full h-[60%] mt-3 mx-2">
+					<Skeleton visible={isLoading} className="w-[30%] h-full"></Skeleton>
+					<Skeleton visible={isLoading} className="w-[30%] h-full"></Skeleton>
+				</div>
 			) : (
 				<header className={cls(classes.header, "pt-3 px-3")}>
 					{burger && burger}
