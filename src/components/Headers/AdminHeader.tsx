@@ -41,6 +41,7 @@ import {
 	hasMetaidAtom,
 	userInfoAtom,
 	walletAtom,
+	walletRestoreParamsAtom,
 } from "@/store/user";
 import { useCallback, useEffect, useState } from "react";
 import { BASE_URL } from "@/utils/request";
@@ -57,6 +58,7 @@ interface Props {
 export default function AdminHeader({ burger }: Props) {
 	const [connected, setConnected] = useRecoilState(connectedAtom);
 	const [wallet, setWallet] = useRecoilState(walletAtom);
+	const [walletParams, setWalletParams] = useRecoilState(walletRestoreParamsAtom);
 	const [btcConnector, setBtcConnector] = useRecoilState<IBtcConnector | null>(btcConnectorAtom);
 	const [userInfo, setUserInfo] = useRecoilState(userInfoAtom);
 	const [metaidFormOpened, metaidFormHandler] = useDisclosure(false);
@@ -140,6 +142,7 @@ export default function AdminHeader({ burger }: Props) {
 		await checkMetaletInstalled();
 		const _wallet = await MetaletWalletForBtc.create();
 		setWallet(_wallet);
+		setWalletParams({ address: _wallet.address, pub: _wallet.pub });
 		setBalance(((await _wallet?.getBalance())?.confirmed ?? 0).toString());
 		await conirmMetaletTestnet();
 		if (isNil(_wallet?.address)) {
@@ -199,7 +202,8 @@ export default function AdminHeader({ burger }: Props) {
 		setBalance(((await window.metaidwallet?.btc.getBalance())?.confirmed ?? 0).toString());
 		setIsSubmitting(true);
 
-		const _wallet = await MetaletWalletForBtc.create();
+		const _wallet = await MetaletWalletForBtc.restore(walletParams!);
+
 		const _btcConnector = await btcConnect(_wallet);
 		if (hasMetaid) {
 			const res = await _btcConnector!.updatUserInfo({ ...userInfo }).catch((error) => {

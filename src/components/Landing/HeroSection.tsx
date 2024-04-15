@@ -22,13 +22,13 @@ export function HeroSection() {
 					Cross-Chain DID Protocol Born for Web3
 				</Title>
 
-				<Text className={classes.description} mt={30}>
-					MetaID Brings Us Into The Web3 New Era
+				<div className={cls(classes.description, "mt-7")}>
+					<Text>MetaID Brings Us Into The Web3 New Era</Text>
 					<Text>
 						Where 7 Billion Users Can Truly Own Their Data And Data Between Apps Can Be
 						Interoperable.
 					</Text>
-				</Text>
+				</div>
 
 				<Group mt={40}>
 					<Button
