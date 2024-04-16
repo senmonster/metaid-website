@@ -81,6 +81,10 @@ const PinDetail = ({ id }: Iprops) => {
 						<Text>{data?.id}</Text>
 					</div>
 					<div className="flex gap-2 items-center">
+						<Text className="text-slate-400 italic">pop:</Text>
+						<Text>{data?.pop}</Text>
+					</div>
+					<div className="flex gap-2 items-center">
 						<Text className="text-slate-400 italic">root txid:</Text>
 						<Text>{data?.rootTxId}</Text>
 					</div>

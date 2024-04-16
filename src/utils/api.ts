@@ -25,6 +25,7 @@ export type Pin = {
 	id: string;
 	type: string;
 	path: string;
+	pop: string;
 	rootId: string;
 };
 
@@ -58,6 +59,7 @@ export type PinDetail = {
 	isTransfered: boolean;
 	preview: string; // "https://man-test.metaid.io/pin/4988b001789b5dd76db60017ce85ccbb04a3f2aa825457aa948dc3c1e3b6e552i0";
 	content: string; // "https://man-test.metaid.io/content/4988b001789b5dd76db60017ce85ccbb04a3f2aa825457aa948dc3c1e3b6e552i0";
+	pop: string;
 };
 
 type Count = {
