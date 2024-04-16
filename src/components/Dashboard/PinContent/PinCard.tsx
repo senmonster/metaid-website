@@ -1,10 +1,19 @@
 import { Pin } from "@/utils/api";
 import React, { useEffect, useState } from "react";
-import { Container, Divider, Skeleton, Text, useMantineColorScheme } from "@mantine/core";
+import {
+	ActionIcon,
+	Container,
+	Divider,
+	Skeleton,
+	Text,
+	Tooltip,
+	useMantineColorScheme,
+} from "@mantine/core";
 import { BASE_URL } from "@/utils/request";
 import { count, isEmpty, isNil } from "ramda";
 import cls from "classnames";
 import { useRouter } from "next/navigation";
+import { IconDots, IconHelp } from "@tabler/icons-react";
 
 type Iprops = {
 	p?: Pin;
@@ -34,8 +43,9 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
 	const getPopColor = (level: number) => {
 		switch (level) {
 			case -1:
-				return "bg-gray-300";
-
+				return "bg-gray-500";
+			case 0:
+				return "bg-white text-slate-600";
 			case 1:
 				return "bg-green-200 text-green-600";
 			case 2:
@@ -53,9 +63,58 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
 			case 8:
 				return "animate-pulse bg-gradient-to-r from-black via-gray-700 to-gray-500";
 			default:
-				return "bg-white text-slate-600";
+				return "";
 		}
 	};
+
+	const popToolTip: React.ReactNode = (
+		<div className="flex flex-col gap-3 text-wrap break-all">
+			<div>
+				This value represents the rarity level of the current pin, with higher levels being
+				rarer. The following are the colors corresponding to different rarity levels:
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">junk</div>
+				<div className="flex-1 h-5 bg-gray-500 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 0</div>
+				<div className="flex-1 h-5 bg-white rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 1</div>
+				<div className="flex-1 h-5 bg-green-200 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 2</div>
+				<div className="flex-1 h-5 bg-blue-200 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 3</div>
+				<div className="flex-1 h-5 bg-purple-200 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 4</div>
+				<div className="flex-1 h-5 bg-orange-200 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 5</div>
+				<div className="flex-1 h-5 bg-yellow-200 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 6</div>
+				<div className="flex-1 h-5 bg-red-200 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 7</div>
+				<div className="flex-1 h-5 animate-pulse bg-gradient-to-r from-orange-400 via-yellow-400 to-red-400 rounded-sm"></div>
+			</div>
+			<div className="flex items-center gap-2">
+				<div className="w-[15%]">level 8</div>
+				<div className="flex-1 h-5 animate-pulse bg-gradient-to-r from-black via-gray-700 to-gray-500 rounded-sm"></div>
+			</div>
+		</div>
+	);
 
 	if (isNil(p)) {
 		return <Skeleton className="h-[258px] w-auto"></Skeleton>;
@@ -77,10 +136,7 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
 			? 8
 			: firstNonZeroIndex;
 	// const level = firstNonZeroIndex === -1 ? 8 : firstNonZeroIndex;
-	console.log(
-		"nonzeroIndex",
-		p.pop.split("").findIndex((v) => v !== "0")
-	);
+
 	return (
 		<div
 			className={cls(
@@ -135,14 +191,38 @@ const PinCard = ({ p, isLoading = false }: Iprops) => {
 							getPopColor(level)
 						)}
 					>
-						{pop.split("").map((n, index) => {
-							return (
-								<div className="place-self-center w-full" key={index}>
-									{level === -1 ? null : n}
-								</div>
-							);
-						})}
+						{level === -1 ? (
+							<div className="w-full text-center">junk</div>
+						) : (
+							pop.split("").map((n, index) => {
+								return (
+									<div className="w-full" key={index}>
+										{n}
+									</div>
+								);
+							})
+						)}
 					</div>
+
+					<Tooltip
+						label={p.pop}
+						classNames={{
+							tooltip: "bg-black text-white w-[300px] text-wrap break-all",
+						}}
+					>
+						<ActionIcon variant={"light"} color="gray" size="xs" aria-label="Settings">
+							<IconDots style={{ width: "70%", height: "70%" }} stroke={1.2} />
+						</ActionIcon>
+					</Tooltip>
+
+					<Tooltip
+						label={popToolTip}
+						classNames={{ tooltip: "bg-black text-white w-[300px] p-2" }}
+					>
+						<ActionIcon variant={"light"} color="gray" size="xs" aria-label="Settings">
+							<IconHelp style={{ width: "70%", height: "70%" }} stroke={1.2} />
+						</ActionIcon>
+					</Tooltip>
 				</div>
 			</div>
 
